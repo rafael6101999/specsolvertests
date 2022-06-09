@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpectraSolver</title>
+    <script src="js/raphael-min.2.0.1.js"></script>
+    <script src="js/kekule/kekule.js?modules=io,chemWidget"></script>
+    <link rel="stylesheet" type="text/css" href="./js/kekule/themes/default/kekule.css" />
+
+</head>
+<body>
+    <img src="./spec/1.png" style="float: left; width: 60%;">
+    <div id="chemComposer0" style="float: right; width: 35%;" ></div>
+    <button onclick="compare()" style="position: relative;">Comprobar estructura</button>
+    <p id="answer" style="text-align: center; font-size: 40px;"></p>
+
+    <script>
+        //var composer = document.getElementById("chemComposer0")
+        //composer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring', 'charge']);
+        var composer = new Kekule.Editor.Composer(document.getElementById('chemComposer0'));
+        composer.setCommonToolButtons([])
+        composer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atomAndFormula', 'ring', 'charge']);
+        composer.setAllowedObjModifierCategories([]);
+        composer.setAllowCreateNewChild(false);
+
+        var url = './mol/1.mol';
+
+        var mol2 = {}
+        Kekule.IO.loadUrlData(url, function(mol, success){
+            if (success)
+            {
+            console.log(mol);
+            mol2 = mol
+            }
+            else
+            {
+            console.log('Loading from ' + url + ' Failed');
+            }
+        });
+
+        var ansCont = document.getElementById("answer")
+
+        function compare(){
+
+        var mol1 = composer.exportObj(Kekule.Molecule);
+        if (mol1.isSameStructureWith(mol2)){
+            ansCont.innerText = "ESTRUCTURA CORRECTA";
+            ansCont.style.color = "green"
+        }
+        else{
+            ansCont.innerText = "ESTRUCTURA INCORRECTA";
+            ansCont.style.color = "red"
+        }
+        }
+    </script>
+</body>
+</html>
